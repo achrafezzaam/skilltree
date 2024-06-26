@@ -1,0 +1,7 @@
+{% if course.active %}
+  <h1>{{ course.title }}</h1>
+  <p>{{ course.description }}</p>
+  <p>{{ course.price }}</p>
+{% else %}
+  <p>This course isn't available for now. Please come back later</p>
+{% endif %}

@@ -3,7 +3,7 @@ from django.db import models
 
 class Detail(models.Model):
     title = models.CharField(max_length=100)
-    Description = models.CharField(max_length=500)
+    description = models.CharField(max_length=500)
     img_path = models.CharField(max_length=150)
     votes = models.IntegerField(default=0)
     price = models.IntegerField(default=0)
