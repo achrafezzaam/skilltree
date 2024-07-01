@@ -1,13 +1,25 @@
+''' Define the Course models, Detail and Message '''
+from django.contrib.auth.models import User
 from django.db import models
 
 
 class Detail(models.Model):
+    ''' Define the Course Detail object '''
     title = models.CharField(max_length=100)
-    description = models.CharField(max_length=500)
+    description = models.CharField(max_length=255)
     img_path = models.CharField(max_length=150)
     votes = models.IntegerField(default=0)
     price = models.IntegerField(default=0)
     active = models.BooleanField(default=False)
+
+    class Meta:
+        permissions = [
+                ("get_courses", "Can get courses"),
+                ("member", "Can get member courses"),
+                ("create_courses", "Can create courses"),
+                ("update_courses", "Can update courses"),
+                ("delete_courses", "Can delete courses"),
+                ]
 
     def __str__(self):
         ''' Create a visual representation when the object is created '''
@@ -27,7 +39,7 @@ class Detail(models.Model):
 
     def set_price(self, price):
         ''' Set the course price
-        
+
             Args:
                 price [int, float]: The new price for the course
             Return:
@@ -38,3 +50,20 @@ class Detail(models.Model):
             self.price = price
         else:
             return "The price should be a number"
+
+
+class Message(models.Model):
+    ''' Define the Message object '''
+    author = models.ForeignKey(
+            User,
+            on_delete=models.CASCADE,
+            )
+    course = models.ForeignKey(
+            Detail,
+            on_delete=models.CASCADE,
+            )
+    content = models.CharField(max_length=200)
+
+    def __str__(self):
+        ''' Create a visual representation when the object is created '''
+        return self.content
