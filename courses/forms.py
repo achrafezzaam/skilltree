@@ -20,3 +20,12 @@ class CommentForm(forms.Form):
         if not content:
             raise ValidationError('No entry. Please write something before submitting')
         return content
+
+class QuestionForm(forms.Form):
+    ''' Define the question forms '''
+    content = forms.CharField(label="Question", max_length=200)
+
+class ChoiceForm(forms.Form):
+    ''' Define the choice forms '''
+    content = forms.CharField(label="Choice text", max_length=200)
+    valide = forms.BooleanField(label="Valid answer")

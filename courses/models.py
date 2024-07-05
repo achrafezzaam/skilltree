@@ -15,7 +15,7 @@ class Detail(models.Model):
     class Meta:
         permissions = [
                 ("get_courses", "Can get courses"),
-                ("member", "Can get member courses"),
+                ("member_courses", "Can get member courses"),
                 ("create_courses", "Can create courses"),
                 ("update_courses", "Can update courses"),
                 ("delete_courses", "Can delete courses"),
@@ -67,3 +67,56 @@ class Message(models.Model):
     def __str__(self):
         ''' Create a visual representation when the object is created '''
         return self.content
+
+
+class Question(models.Model):
+    ''' Create the Question object '''
+    course = models.ForeignKey(
+            Detail,
+            on_delete=models.CASCADE,
+            )
+    content = models.CharField(max_length=255)
+
+    class Meta:
+        permissions = [
+                ("create_questions", "Can create questions"),
+                ]
+
+    def __str__(self):
+        ''' Create a visual representation when the object is created '''
+        return self.content
+
+
+class Choice(models.Model):
+    ''' Create the Choice object '''
+    question = models.ForeignKey(
+            Question,
+            on_delete=models.CASCADE,
+            )
+    choice_text = models.CharField(max_length=200)
+    right_answer = models.BooleanField(default=False)
+
+    class Meta:
+        permissions = [
+                ("create_choices", "Can create choices"),
+                ]
+
+    def __str__(self):
+        ''' Create a visual representation when the object is created '''
+        return self.choice_text
+
+
+class Answer(models.Model):
+    ''' Create the Answer object '''
+    question = models.ForeignKey(
+            Question,
+            on_delete=models.CASCADE,
+            )
+    choice = models.ForeignKey(
+            Choice,
+            on_delete=models.CASCADE,
+            )
+
+    def __str__(self):
+        ''' Create a visual representation when the object is created '''
+        return self.choice

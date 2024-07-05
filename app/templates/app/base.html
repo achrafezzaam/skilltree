@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SkillTree</title>
+  </head>
+  <body>
+    <nav>
+      <h1>SkillTree</h1>
+      <ul>
+        {% if user.is_authenticated %}
+	  {% if user.groups.all.0.name == 'site-admin' %}
+	      <li><a href="{% url 'courses:admin-dashboard' %}">Dashboard</a></li>
+          {% else %}
+	      <li><a href="{% url 'courses:courses' %}">Dashboard</a></li>
+          {% endif %}
+          <li><a href="{% url 'app:logout' %}">Logout</a></li>
+        {% else %}
+	<li><a href="{% url 'app:signin' %}">Signin</a></li>
+	<li><a href="{% url 'app:signup' %}">Signup</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% block content %}
+    {% endblock %}
+  </body>
+</html> 
