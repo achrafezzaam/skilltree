@@ -2,13 +2,17 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.paginator import Paginator
 from .models import Detail, Message, Question
 from .forms import DetailForm, CommentForm, QuestionForm, ChoiceForm
 
 
 @login_required
 def index(request):
-    courses_list = Detail.objects.all()
+    courses = Detail.objects.all()
+    paginator = Paginator(courses, 5)
+    page_num = request.GET.get("page")
+    courses_list = paginator.get_page(page_num)
     context = {"courses_list": courses_list}
     return render(request, "courses/index.html", context)
 
@@ -16,7 +20,6 @@ def index(request):
 @login_required
 @permission_required('courses.create_courses', raise_exception=True)
 def admin_dashboard(request):
-    courses_list = Detail.objects.all()
     if request.method == 'POST':
         form = DetailForm(request.POST)
         if form.is_valid():
@@ -26,7 +29,6 @@ def admin_dashboard(request):
     else:
         form = DetailForm()
     context = {
-            "courses_list": courses_list,
             "form": form,
             }
     return render(request, "courses/admin_dashboard.html", context)
@@ -35,8 +37,14 @@ def admin_dashboard(request):
 @login_required
 def detail_view(request, course_id):
     course = get_object_or_404(Detail, pk=course_id)
-    comments_list = Message.objects.filter(course=course)
-    questions_list = Question.objects.filter(course=course)
+    comments = Message.objects.filter(course=course)
+    comments_paginator = Paginator(comments, 5)
+    comments_page_num = request.GET.get("comments_page")
+    comments_list = comments_paginator.get_page(comments_page_num)
+    questions = Question.objects.filter(course=course)
+    questions_paginator = Paginator(questions, 5)
+    questions_page_num = request.GET.get("questions_page")
+    questions_list = questions_paginator.get_page(questions_page_num)
     if request.method == 'POST':
         if 'comment_submit' in request.POST:
             commentform = CommentForm(request.POST)

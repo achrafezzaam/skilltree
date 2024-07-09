@@ -7,9 +7,28 @@
   <p>{{ course.price }}</p>
   {% if user.groups.all.0.name == 'site-admin' %}
     <h2>Question</h2>
+    <ul>
     {% for question in questions_list %}
       <li><a href="{% url "courses:question" question.id %}">Question number {{question.id}}</a></li>
     {% endfor %}
+    </ul>
+    <div class="pagination">
+    <span class="step-links">
+        {% if questions_list.has_previous %}
+            <a href="?questions_page=1">&laquo; first</a>
+            <a href="?questions_page={{ questions_list.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ questions_list.number }} of {{ questions_list.paginator.num_pages }}.
+        </span>
+
+        {% if questions_list.has_next %}
+            <a href="?questions_page={{ questions_list.next_page_number }}">next</a>
+            <a href="?questions_page={{ questions_list.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+    </div>
     <h2>Add a Question</h2>
     <form method="post">
       {% csrf_token %}
@@ -18,9 +37,28 @@
     </form>
   {% endif %}
   <h2>Comments</h2>
+  <ul>
   {% for comment in comments_list %}
-    <p>{{ comment.content }}</p>
+    <li>{{ comment.content }}</li>
   {% endfor %}
+  </ul>
+  <div class="pagination">
+    <span class="step-links">
+        {% if comments_list.has_previous %}
+            <a href="?comments_page=1">&laquo; first</a>
+            <a href="?comments_page={{ comments_list.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ comments_list.number }} of {{ comments_list.paginator.num_pages }}.
+        </span>
+
+        {% if comments_list.has_next %}
+            <a href="?comments_page={{ comments_list.next_page_number }}">next</a>
+            <a href="?comments_page={{ comments_list.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+    </div>
   <h2>Comment</h2>
   <form method="post">
     {% csrf_token %}
