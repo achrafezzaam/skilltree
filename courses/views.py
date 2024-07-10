@@ -1,3 +1,4 @@
+''' Handling the views for the courses app '''
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
@@ -9,6 +10,10 @@ from .forms import DetailForm, CommentForm, QuestionForm, ChoiceForm
 
 @login_required
 def index(request):
+    ''' The user dashboard page currently displaying
+        all the courses created with pagination, each page
+        has 5 elements.
+    '''
     courses = Detail.objects.all()
     paginator = Paginator(courses, 5)
     page_num = request.GET.get("page")
@@ -20,6 +25,9 @@ def index(request):
 @login_required
 @permission_required('courses.create_courses', raise_exception=True)
 def admin_dashboard(request):
+    ''' The site administrator dashboard page.
+        This view has a form where the admin
+        can create new courses.'''
     if request.method == 'POST':
         form = DetailForm(request.POST)
         if form.is_valid():
@@ -36,6 +44,10 @@ def admin_dashboard(request):
 
 @login_required
 def detail_view(request, course_id):
+    ''' This view shows the details of a specific course.
+        Users can write and view comments, and also view questions.
+        The site administrator has the same features of the user
+        plus the ability to create questions.'''
     course = get_object_or_404(Detail, pk=course_id)
     comments = Message.objects.filter(course=course)
     comments_paginator = Paginator(comments, 5)
@@ -83,9 +95,19 @@ def detail_view(request, course_id):
 @login_required
 @permission_required('courses.create_questions', raise_exception=True)
 def question_view(request, question_id):
+    ''' This view handles the questions choices creation.
+        This view requires the create_questions permission
+        to be accessed which limits its access to site administrators
+        for the time being.
+    '''
     return render(request, "courses/question.html")
 
 
 @login_required
 def vote(request, course_id):
+    ''' This view handles the courses voting system.
+        This feature isn't implemented for the time being.
+
+        TODO: make a call of this view using JQuery
+    '''
     return HttpResponse("You're voting on the course {}.".format(course_id))
