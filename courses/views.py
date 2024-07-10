@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
-from .models import Detail, Message, Question
+from .models import Detail, Message, Question, Choice
 from .forms import DetailForm, CommentForm, QuestionForm, ChoiceForm
 
 
@@ -93,14 +93,27 @@ def detail_view(request, course_id):
 
 
 @login_required
-@permission_required('courses.create_questions', raise_exception=True)
 def question_view(request, question_id):
     ''' This view handles the questions choices creation.
-        This view requires the create_questions permission
-        to be accessed which limits its access to site administrators
-        for the time being.
     '''
-    return render(request, "courses/question.html")
+    question = get_object_or_404(Question, pk=question_id)
+    choices = Choice.objects.filter(question=question)
+    if request.method == 'POST':
+        form = ChoiceForm(request.POST)
+        if form.is_valid():
+            choice = Choice(
+                    question=question,
+                    **form.cleaned_data)
+            choice.save()
+        return redirect(request.META['HTTP_REFERER'])
+    else:
+        form = ChoiceForm()
+    context = {
+            "question": question,
+            "choices": choices,
+            "form": form,
+            }
+    return render(request, "courses/question.html", context)
 
 
 @login_required

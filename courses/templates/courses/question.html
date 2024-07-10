@@ -1,5 +1,22 @@
 {% extends "./base.html" %}
 
 {% block content %}
-<p>Welcome to the Question description view!</p>
+<h2>Question</h2>
+<p>{{ question.content }}</p>
+{% if choices %}
+<ul>
+{% for choice in choices %}
+  <li>{{ choice.choice_text }}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>No choices created yet</p>
+{% endif %}
+{% if user.groups.all.0.name == 'site-admin' %}
+<form method='post'>
+{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Add">
+</form>
+{% endif %}
 {% endblock %}

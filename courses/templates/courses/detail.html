@@ -5,7 +5,6 @@
   <h1>{{ course.title }}</h1>
   <p>{{ course.description }}</p>
   <p>{{ course.price }}</p>
-  {% if user.groups.all.0.name == 'site-admin' %}
     <h2>Question</h2>
     <ul>
     {% for question in questions_list %}
@@ -29,6 +28,7 @@
         {% endif %}
     </span>
     </div>
+  {% if user.groups.all.0.name == 'site-admin' %}
     <h2>Add a Question</h2>
     <form method="post">
       {% csrf_token %}

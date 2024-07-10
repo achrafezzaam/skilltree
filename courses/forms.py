@@ -8,7 +8,7 @@ class DetailForm(forms.Form):
     title = forms.CharField(label="Title", max_length=100)
     description = forms.CharField(label="Description", max_length=255)
     price = forms.FloatField(label="Price")
-    active = forms.BooleanField(label="Activate")
+    active = forms.BooleanField(label="Activate", required=False)
 
 
 class CommentForm(forms.Form):
@@ -27,5 +27,5 @@ class QuestionForm(forms.Form):
 
 class ChoiceForm(forms.Form):
     ''' Define the choice forms '''
-    content = forms.CharField(label="Choice text", max_length=200)
-    valide = forms.BooleanField(label="Valid answer")
+    choice_text = forms.CharField(label="Choice text", max_length=200)
+    right_answer = forms.BooleanField(label="Valid answer", required=False)
