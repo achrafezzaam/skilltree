@@ -1,0 +1,32 @@
+{% extends "./base.html" %}
+
+{% block content %}
+{% if courses_list %}
+  <ul>
+    {% for course in courses_list %}
+      <li>
+        <a href="{% url 'courses:detail' course.id %}">{{ course.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+  <div class="pagination">
+    <span class="step-links">
+        {% if courses_list.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ courses_list.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ courses_list.number }} of {{ courses_list.paginator.num_pages }}.
+        </span>
+
+        {% if courses_list.has_next %}
+            <a href="?page={{ courses_list.next_page_number }}">next</a>
+            <a href="?page={{ courses_list.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+{% else %}
+  <p>No courses available.</p>
+{% endif %}
+{% endblock %}

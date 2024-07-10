@@ -1,0 +1,71 @@
+{% extends "./base.html" %}
+
+{% block content %}
+{% if course.active %}
+  <h1>{{ course.title }}</h1>
+  <p>{{ course.description }}</p>
+  <p>{{ course.price }}</p>
+    <h2>Question</h2>
+    <ul>
+    {% for question in questions_list %}
+      <li><a href="{% url "courses:question" question.id %}">Question number {{question.id}}</a></li>
+    {% endfor %}
+    </ul>
+    <div class="pagination">
+    <span class="step-links">
+        {% if questions_list.has_previous %}
+            <a href="?questions_page=1">&laquo; first</a>
+            <a href="?questions_page={{ questions_list.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ questions_list.number }} of {{ questions_list.paginator.num_pages }}.
+        </span>
+
+        {% if questions_list.has_next %}
+            <a href="?questions_page={{ questions_list.next_page_number }}">next</a>
+            <a href="?questions_page={{ questions_list.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+    </div>
+  {% if user.groups.all.0.name == 'site-admin' %}
+    <h2>Add a Question</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ questionform.as_p }}
+      <input type="submit" name="question_submit" value="Add">
+    </form>
+  {% endif %}
+  <h2>Comments</h2>
+  <ul>
+  {% for comment in comments_list %}
+    <li>{{ comment.content }}</li>
+  {% endfor %}
+  </ul>
+  <div class="pagination">
+    <span class="step-links">
+        {% if comments_list.has_previous %}
+            <a href="?comments_page=1">&laquo; first</a>
+            <a href="?comments_page={{ comments_list.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ comments_list.number }} of {{ comments_list.paginator.num_pages }}.
+        </span>
+
+        {% if comments_list.has_next %}
+            <a href="?comments_page={{ comments_list.next_page_number }}">next</a>
+            <a href="?comments_page={{ comments_list.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+    </div>
+  <h2>Comment</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ commentform.as_p }}
+    <input type="submit" name="comment_submit" value="Comment">
+  </form>
+{% else %}
+  <p>This course isn't available for now. Please come back later</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "./base.html" %}
+
+{% block content %}
+<h2>Create a new course</h2>
+<form method='post'>
+  {% csrf_token %}
+  {{form}}
+  <input type="submit" value="Create">
+</form>
+<h2>Courses list</h2>
+<ul>
+  <li><a href="{% url 'courses:courses' %}">Courses List</a></li>
+</ul>
+{% endblock %}
