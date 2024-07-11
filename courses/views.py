@@ -41,6 +41,12 @@ def admin_dashboard(request):
             }
     return render(request, "courses/admin_dashboard.html", context)
 
+@login_required
+@permission_required('courses.create_courses', raise_exception=True)
+def delete_course(request, course_id):
+    course = get_object_or_404(Detail, pk=course_id)
+    course.delete()
+    return redirect("/courses/")
 
 @login_required
 def detail_view(request, course_id):

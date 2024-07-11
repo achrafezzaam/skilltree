@@ -6,6 +6,9 @@
     {% for course in courses_list %}
       <li>
         <a href="{% url 'courses:detail' course.id %}">{{ course.title }}</a>
+	{% if user.groups.all.0.name == 'site-admin' %}
+	<a href="{% url 'courses:delete_course' course.id %}">Delete</a>
+	{% endif %}
       </li>
     {% endfor %}
   </ul>
